@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from model import model
+from ann.model import model
 
 def test(image_path, classes):
 
@@ -14,7 +14,7 @@ def test(image_path, classes):
     image = np.array([image])
 
     m = model(len(classes))
-    m.load_weights('cnn_emotions.weights')
+    m.load_weights('weights/cnn_emotions.weights')
     m.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     prediction = m.predict(image)

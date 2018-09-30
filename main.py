@@ -3,8 +3,8 @@
 import cv2
 import sys
 
-from train import train
-from test import test
+from ann.train import train
+from ann.test import test
 
 def main():
 

@@ -4,7 +4,7 @@ import os
 
 from keras.utils.np_utils import to_categorical
 
-from model import model
+from ann.model import model
 
 def X(files):
 
@@ -55,5 +55,5 @@ def train(classes):
 
     m.fit(x_train, y_train, batch_size=100, epochs=300, validation_data=(x_test, y_test))
 
-    m.save_weights('cnn_emotions.weights')
-    m.save('cnn_emotions_caio.model')
+    m.save_weights('weights/cnn_emotions.weights')
+    m.save('weights/cnn_emotions_caio.model')
