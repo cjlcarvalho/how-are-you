@@ -7,7 +7,7 @@ def test(image_path, classes):
 
     im = cv2.imread(image_path)
 
-    image = cv2.resize(im, (48,48))
+    image = cv2.resize(im, (256, 256))
 
     # It will expect a 4D array as input, because of x_train
     # So put the image inside of a np array

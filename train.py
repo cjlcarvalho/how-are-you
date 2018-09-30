@@ -12,7 +12,9 @@ def X(files):
 
     for f in files:
 
-        result.append(cv2.resize(cv2.imread('images/' + f), (48, 48)))
+        if f.endswith('.jpg'):
+
+            result.append(cv2.resize(cv2.imread('images/' + f), (256, 256)))
 
     return np.array(result)
 
