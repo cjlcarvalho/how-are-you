@@ -1,5 +1,6 @@
 #! /usr/bin/python
 
+import cv2
 import sys
 
 from train import train
@@ -21,15 +22,39 @@ def main():
 
     elif sys.argv[1] == 'test':
 
-        if len(sys.argv) == 3:
+        cam = cv2.VideoCapture(0)
 
-            test(sys.argv[2], emotions)
+        cv2.namedWindow('How are you?')
 
-        else:
+        count = 0
 
-            print('No input was given')
+        while True:
 
-            return 1
+            ret, frame = cam.read()
+
+            cv2.imshow('How are you?', frame)
+
+            if not ret:
+
+                break
+
+            k = cv2.waitKey(1)
+
+            if k % 256 == 27:
+
+                print('Closing...')
+
+                break
+
+            elif k % 256 == 32:
+
+                img_name = 'frame_%d.jpg' % count
+
+                cv2.imwrite(img_name, frame)
+
+                test(img_name, emotions)
+
+                count += 1
 
     else:
 
