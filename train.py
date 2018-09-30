@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import random
 
 from keras.utils.np_utils import to_categorical
 
@@ -35,6 +36,8 @@ def Y(files, classes):
 def train(classes):
 
     files = os.listdir('images')
+
+    random.shuffle(files)
 
     x = X(files)
     y = Y(files, classes)
