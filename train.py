@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import os
-import random
 
 from keras.utils.np_utils import to_categorical
 
@@ -15,7 +14,7 @@ def X(files):
 
         if f.endswith('.jpg'):
 
-            result.append(cv2.resize(cv2.imread('images/' + f), (256, 256)))
+            result.append(cv2.resize(cv2.imread('images/' + f), (96, 96)))
 
     return np.array(result)
 
@@ -36,8 +35,6 @@ def Y(files, classes):
 def train(classes):
 
     files = os.listdir('images')
-
-    random.shuffle(files)
 
     x = X(files)
     y = Y(files, classes)

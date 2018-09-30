@@ -11,7 +11,7 @@ def model(num_classes):
 
     m = Sequential()
 
-    m.add(Conv2D(10, (5, 5), activation='relu', input_shape=(256, 256, 3)))
+    m.add(Conv2D(10, (5, 5), activation='relu', input_shape=(96, 96, 3)))
     m.add(AveragePooling2D((2,2)))
 
     m.add(Conv2D(10, (5, 5), activation='relu'))
