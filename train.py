@@ -53,7 +53,7 @@ def train(classes):
 
     m.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    m.fit(x_train, y_train, batch_size=100, epochs=300, validation_split=0.1)
+    m.fit(x_train, y_train, batch_size=100, epochs=300, validation_data=(x_test, y_test))
 
     m.save_weights('cnn_emotions.weights')
     m.save('cnn_emotions_caio.model')
