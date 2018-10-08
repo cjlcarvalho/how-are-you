@@ -9,9 +9,7 @@ from ann.model import model
 def extract_faces(img):
     cropped_images = []
     face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    print('img', img.shape)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    print('gray', gray.shape)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     for (x, y, w, h) in faces:
         roi = img[y:y+h, x:x+w]
@@ -25,7 +23,6 @@ def X(files):
 
     for f in files:
         if f.endswith('.jpg'):
-            print(f)
             img = cv2.imread('images/' + f)
             faces = extract_faces(img)
             for face in faces:
