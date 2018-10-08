@@ -6,15 +6,30 @@ from keras.utils.np_utils import to_categorical
 
 from ann.model import model
 
+def extract_faces(img):
+    cropped_images = []
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    print('img', img.shape)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    print('gray', gray.shape)
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    for (x, y, w, h) in faces:
+        roi = img[y:y+h, x:x+w]
+        cropped_images.append(roi)
+    return cropped_images
+            
+
 def X(files):
 
     result = []
 
     for f in files:
-
         if f.endswith('.jpg'):
-
-            result.append(cv2.resize(cv2.imread('images/' + f), (96, 96)))
+            print(f)
+            img = cv2.imread('images/' + f)
+            faces = extract_faces(img)
+            for face in faces:
+                result.append(cv2.resize(face, (96, 96)))
 
     return np.array(result)
 
