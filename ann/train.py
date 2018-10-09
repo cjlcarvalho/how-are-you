@@ -24,6 +24,7 @@ def extract_faces(img):
     i = 0
     biggest_index = 0
     largest_area = 0
+    
     for (x, y, w, h) in faces:
         if (w * h) > largest_area:
             biggest_index = i
@@ -36,8 +37,7 @@ def extract_faces(img):
     w = faces[biggest_index, 2]
     h = faces[biggest_index, 3]
 
-    # Return biggest face
-    # roi = img[faces[biggest_index, 1]:faces[biggest_index, 1]+faces[biggest_index, 3], faces[biggest_index, 0]:faces[biggest_index, 0]+faces[biggest_index, 2]]
+    # Return biggest face area
     roi = img[y:y + h, x:x + w]
     return roi
 
@@ -49,7 +49,6 @@ def X(files):
         # Make it lowercase first
         # JPG and jpg is not the same
         if f.lower().endswith('.jpg'):
-            print(f)
             img = cv2.imread('images/' + f)
             face = extract_faces(img)
             if face is not None:
