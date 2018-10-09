@@ -6,32 +6,59 @@ from keras.utils.np_utils import to_categorical
 
 from ann.model import model
 
+
 def extract_faces(img):
-    cropped_images = []
+    # Reading cascade
     face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+    # Converting RGB to Gray-scale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Detecting faces
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+    # If there is no detected face, return None
+    if not len(faces) > 0:
+        return
+
+    i = 0
+    biggest_index = 0
+    largest_area = 0
     for (x, y, w, h) in faces:
-        roi = img[y:y+h, x:x+w]
-        cropped_images.append(roi)
-    return cropped_images
-            
+        if (w * h) > largest_area:
+            biggest_index = i
+            largest_area = w * h
+        i = i + 1
+
+    # Unpack values
+    x = faces[biggest_index, 0]
+    y = faces[biggest_index, 1]
+    w = faces[biggest_index, 2]
+    h = faces[biggest_index, 3]
+
+    # Return biggest face
+    # roi = img[faces[biggest_index, 1]:faces[biggest_index, 1]+faces[biggest_index, 3], faces[biggest_index, 0]:faces[biggest_index, 0]+faces[biggest_index, 2]]
+    roi = img[y:y + h, x:x + w]
+    return roi
+
 
 def X(files):
-
     result = []
 
     for f in files:
-        if f.endswith('.jpg'):
+        # Make it lowercase first
+        # JPG and jpg is not the same
+        if f.lower().endswith('.jpg'):
+            print(f)
             img = cv2.imread('images/' + f)
-            faces = extract_faces(img)
-            for face in faces:
+            face = extract_faces(img)
+            if face is not None:
                 result.append(cv2.resize(face, (96, 96)))
 
     return np.array(result)
 
-def Y(files, classes):
 
+def Y(files, classes):
     result = []
 
     for f in files:
@@ -39,13 +66,12 @@ def Y(files, classes):
         for i in range(len(classes)):
 
             if classes[i] in f:
-
                 result.append(i)
 
     return np.array(result)
 
-def train(classes):
 
+def train(classes):
     files = os.listdir('images')
 
     x = X(files)
