@@ -23,8 +23,6 @@ def test(image_path, classes):
 
     cv2.putText(im, classes[best[-1]], (im.shape[1] - 100, im.shape[0] - 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [0, 0, 255], 2)
 
-    cv2.imshow('Prediction', im)
-
     if cv2.waitKey(0) & 0xFF == ord('q'):
 
-        return
+        return im
