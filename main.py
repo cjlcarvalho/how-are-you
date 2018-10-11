@@ -52,7 +52,9 @@ def main():
 
                 cv2.imwrite(img_name, frame)
 
-                test(img_name, emotions)
+                predicted_img = test(img_name, emotions)
+
+                cv2.imshow('Prediction', predicted_img)
 
                 count += 1
 
