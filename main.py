@@ -12,7 +12,7 @@ def main():
 
         print('Please specify your option [test/train]')
 
-        return 1
+        return
 
     emotions = ['NEUTRAL', 'HAPPY', 'SAD', 'SURPRISED']
 
@@ -26,44 +26,30 @@ def main():
 
         cv2.namedWindow('How are you?')
 
-        count = 0
-
         while True:
 
             ret, frame = cam.read()
 
-            cv2.imshow('How are you?', frame)
-
             if not ret:
 
                 break
+            
+            predicted = test(frame, emotions)
 
+            cv2.imshow('How are you?', predicted if predicted is not None else frame)
+            
             k = cv2.waitKey(1)
-
+            
             if k % 256 == 27:
-
+                
                 print('Closing...')
 
                 break
-
-            elif k % 256 == 32:
-
-                img_name = 'frame_%d.jpg' % count
-
-                cv2.imwrite(img_name, frame)
-
-                predicted_img = test(img_name, emotions)
-
-                cv2.imshow('Prediction', predicted_img)
-
-                count += 1
 
     else:
 
         print('Wrong option')
 
-        return 1
-
-    return 0
+        return
 
 main()

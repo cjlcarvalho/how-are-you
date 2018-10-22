@@ -2,27 +2,33 @@ import cv2
 import numpy as np
 
 from ann.model import model
+from ann.utils import extract_face
 
-def test(image_path, classes):
+def test(image, classes):
 
-    im = cv2.imread(image_path)
+    face = extract_face(image)
 
-    image = cv2.resize(im, (96, 96))
+    if face is not None:
 
-    # It will expect a 4D array as input, because of x_train
-    # So put the image inside of a np array
-    image = np.array([image])
+        face = cv2.resize(face, (96, 96))
 
-    m = model(len(classes))
-    m.load_weights('weights/cnn_emotions.weights')
-    m.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        # It will expect a 4D array as input, because of x_train
+        # So put the image inside of a np array
+        face = np.array([face])
 
-    prediction = m.predict(image)
+        m = model(len(classes))
+        m.load_weights('weights/cnn_emotions.weights')
+        m.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    best = np.argsort(prediction)[0, :]
+        prediction = m.predict(face)
 
-    cv2.putText(im, classes[best[-1]], (im.shape[1] - 100, im.shape[0] - 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [0, 0, 255], 2)
+        best = np.argsort(prediction)[0, :]
 
-    if cv2.waitKey(0) & 0xFF == ord('q'):
+        cv2.putText(image, classes[best[-1]], (image.shape[1] - 100, image.shape[0] - 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [0, 0, 255], 2)
 
-        return im
+        return image
+
+    print('Face not found')
+
+    return None
+

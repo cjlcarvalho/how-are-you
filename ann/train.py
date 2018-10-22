@@ -5,76 +5,47 @@ import os
 from keras.utils.np_utils import to_categorical
 
 from ann.model import model
+from ann.utils import extract_face
 
+def generate_data(files, classes):
 
-def extract_faces(img):
-    # Reading cascade
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    print('Generating X and Y...')
 
-    # Converting RGB to Gray-scale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # Detecting faces
-    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-
-    # If there is no detected face, return None
-    if not len(faces) > 0:
-        return
-
-    i = 0
-    biggest_index = 0
-    largest_area = 0
-    
-    for (x, y, w, h) in faces:
-        if (w * h) > largest_area:
-            biggest_index = i
-            largest_area = w * h
-        i = i + 1
-
-    # Unpack values
-    x = faces[biggest_index, 0]
-    y = faces[biggest_index, 1]
-    w = faces[biggest_index, 2]
-    h = faces[biggest_index, 3]
-
-    # Return biggest face area
-    roi = img[y:y + h, x:x + w]
-    return roi
-
-
-def X(files):
-    result = []
+    X = []
+    Y = []
 
     for f in files:
-        # Make it lowercase first
-        # JPG and jpg is not the same
+
         if f.lower().endswith('.jpg'):
+
             img = cv2.imread('images/' + f)
-            face = extract_faces(img)
+            face = extract_face(img)
+
             if face is not None:
-                result.append(cv2.resize(face, (96, 96)))
 
-    return np.array(result)
+                X.append(cv2.resize(face, (96, 96)))
 
+                for i in range(len(classes)):
 
-def Y(files, classes):
-    result = []
+                    if classes[i] in f:
 
-    for f in files:
+                        Y.append(i)
 
-        for i in range(len(classes)):
-
-            if classes[i] in f:
-                result.append(i)
-
-    return np.array(result)
-
+    return (np.array(X), np.array(Y))
 
 def train(classes):
+
     files = os.listdir('images')
 
-    x = X(files)
-    y = Y(files, classes)
+    x, y = generate_data(files, classes)
+
+    print('Found %d data to evaluate' % len(x))
+
+    for face in x:
+
+        cv2.imshow('Face', face)
+
+        cv2.waitKey(0)
 
     y = to_categorical(y)
 
@@ -88,9 +59,9 @@ def train(classes):
 
     m = model(len(classes))
 
-    m.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    m.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    m.fit(x_train, y_train, batch_size=100, epochs=300, validation_data=(x_test, y_test))
+    m.fit(x_train, y_train, batch_size=100, epochs=100, validation_data=(x_test, y_test))
 
     m.save_weights('weights/cnn_emotions.weights')
-    m.save('weights/cnn_emotions_caio.model')
+    m.save('weights/cnn_emotions.model')
