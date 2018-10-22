@@ -14,7 +14,7 @@ def main():
 
         return
 
-    emotions = ['NEUTRAL', 'HAPPY', 'SAD', 'SURPRISED']
+    emotions = ['NEUTRAL', 'HAPPY', 'SLEEPY', 'SURPRISED']
 
     if sys.argv[1] == 'train':
 
@@ -26,6 +26,8 @@ def main():
 
         cv2.namedWindow('How are you?')
 
+        count = 0
+
         while True:
 
             ret, frame = cam.read()
@@ -33,15 +35,21 @@ def main():
             if not ret:
 
                 break
-            
+
             predicted = test(frame, emotions)
 
             cv2.imshow('How are you?', predicted if predicted is not None else frame)
-            
+
+            if predicted is not None:
+
+                cv2.imwrite('image_%d.jpg' % count, predicted)
+
+                count += 1
+
             k = cv2.waitKey(1)
-            
+
             if k % 256 == 27:
-                
+
                 print('Closing...')
 
                 break

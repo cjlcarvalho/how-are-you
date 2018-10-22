@@ -10,7 +10,7 @@ def test(image, classes):
 
     if face is not None:
 
-        face = cv2.resize(face, (96, 96))
+        face = cv2.resize(face, (48, 48))
 
         # It will expect a 4D array as input, because of x_train
         # So put the image inside of a np array
@@ -18,7 +18,7 @@ def test(image, classes):
 
         m = model(len(classes))
         m.load_weights('weights/cnn_emotions.weights')
-        m.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+        m.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
         prediction = m.predict(face)
 

@@ -23,7 +23,7 @@ def generate_data(files, classes):
 
             if face is not None:
 
-                X.append(cv2.resize(face, (96, 96)))
+                X.append(cv2.resize(face, (48, 48)))
 
                 for i in range(len(classes)):
 
@@ -41,12 +41,6 @@ def train(classes):
 
     print('Found %d data to evaluate' % len(x))
 
-    for face in x:
-
-        cv2.imshow('Face', face)
-
-        cv2.waitKey(0)
-
     y = to_categorical(y)
 
     seventy_five_percent = int(len(files) * 0.75)
@@ -59,9 +53,9 @@ def train(classes):
 
     m = model(len(classes))
 
-    m.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    m.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    m.fit(x_train, y_train, batch_size=100, epochs=100, validation_data=(x_test, y_test))
+    m.fit(x_train, y_train, batch_size=100, epochs=1000, validation_data=(x_test, y_test))
 
     m.save_weights('weights/cnn_emotions.weights')
     m.save('weights/cnn_emotions.model')

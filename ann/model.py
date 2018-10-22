@@ -10,7 +10,7 @@ def model(num_classes):
 
     m = Sequential()
 
-    m.add(Conv2D(10, (5, 5), activation='relu', input_shape=(96, 96, 3)))
+    m.add(Conv2D(10, (5, 5), activation='relu', input_shape=(48, 48, 3)))
     m.add(MaxPooling2D((2,2)))
 
     m.add(Conv2D(10, (5, 5), activation='relu'))
